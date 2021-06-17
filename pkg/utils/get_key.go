@@ -106,9 +106,9 @@ func (d *APIKeyImpl) UpdateIAMKeys(config *config.Config) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 	defer cc.Close()
-
+	// setting cipher empty val
 	if config.Bluemix.Encryption {
-		r, err := c.GetContainerAPIKey(ctx, &pb.Cipher{Cipher: config.Bluemix.IamAPIKey, RequestID: requestID})
+		r, err := c.GetContainerAPIKey(ctx, &pb.Cipher{Cipher: "", RequestID: requestID})
 		if err != nil {
 			return err
 		}
