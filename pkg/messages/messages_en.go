@@ -95,6 +95,18 @@ var messagesEn = map[string]Message{
 		Type:        codes.InvalidArgument,
 		Action:      "Please check all node's labels by using kubectl command",
 	},
+	EndpointNotReachable: {
+		Code:        EndpointNotReachable,
+		Description: "Endpoint is incorrect",
+		Type:        codes.PermissionDenied,
+		Action:      "User should review the storage secret endpoint",
+	},
+	Timeout: {
+		Code:        Timeout,
+		Description: "Timed out for response from endpoint",
+		Type:        codes.DeadlineExceeded,
+		Action:      "Please retry after some time.",
+	},
 	FailedPrecondition: {
 		Code:        FailedPrecondition,
 		Description: "Provider is not ready to responde",
