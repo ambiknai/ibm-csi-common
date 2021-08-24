@@ -18,14 +18,15 @@
 package mountmanager
 
 import (
-	"k8s.io/kubernetes/pkg/util/mount"
+	mount "k8s.io/mount-utils"
+	exec "k8s.io/utils/exec"
 )
 
 // NewFakeSafeMounter ...
 func NewFakeSafeMounter() *mount.SafeFormatAndMount {
-	execCallback := func(cmd string, args ...string) ([]byte, error) {
-		return nil, nil
-	}
+	// execCallback := func(cmd string, args ...string) ([]byte, error) {
+	// 	return nil, nil
+	// }
 	fakeMounter := &mount.FakeMounter{MountPoints: []mount.MountPoint{{
 		Device: "valid-devicePath",
 		Path:   "valid-vol-path",
@@ -33,8 +34,10 @@ func NewFakeSafeMounter() *mount.SafeFormatAndMount {
 		Opts:   []string{"defaults"},
 		Freq:   1,
 		Pass:   2,
-	}}, Log: []mount.FakeAction{}}
-	fakeExec := mount.NewFakeExec(execCallback)
+	}},
+	}
+	fakeExec := exec.New()
+	//mount.NewFakeExec(execCallback)
 	return &mount.SafeFormatAndMount{
 		Interface: fakeMounter,
 		Exec:      fakeExec,
