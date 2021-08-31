@@ -20,10 +20,11 @@ package mountmanager
 import (
 	mount "k8s.io/mount-utils"
 	exec "k8s.io/utils/exec"
+	testExec "k8s.io/utils/exec/testing"
 )
 
 // NewFakeSafeMounter ...
-func NewFakeSafeMounter() *mount.SafeFormatAndMount {
+func NewFakeSafeMounter() Mounter {
 	// execCallback := func(cmd string, args ...string) ([]byte, error) {
 	// 	return nil, nil
 	// }
@@ -36,10 +37,12 @@ func NewFakeSafeMounter() *mount.SafeFormatAndMount {
 		Pass:   2,
 	}},
 	}
-	fakeExec := exec.New()
+	//TODO: NewFakeExec is deprecated; failing test
+	//fakeExec := exec.New()
+	var fakeExecInterface exec.Interface = &testExec.FakeExec{}
 	//mount.NewFakeExec(execCallback)
-	return &mount.SafeFormatAndMount{
+	return &NodeMounter{&mount.SafeFormatAndMount{
 		Interface: fakeMounter,
-		Exec:      fakeExec,
-	}
+		Exec:      fakeExecInterface,
+	}}
 }
