@@ -23,11 +23,14 @@ import (
 	testExec "k8s.io/utils/exec/testing"
 )
 
+// NewNodeMounter ...
+func NewFakeNodeMounter() Mounter {
+	fakesafemounter := NewFakeSafeMounter()
+	return &NodeMounter{fakesafemounter}
+}
+
 // NewFakeSafeMounter ...
-func NewFakeSafeMounter() Mounter {
-	// execCallback := func(cmd string, args ...string) ([]byte, error) {
-	// 	return nil, nil
-	// }
+func NewFakeSafeMounter() *mount.SafeFormatAndMount {
 	fakeMounter := &mount.FakeMounter{MountPoints: []mount.MountPoint{{
 		Device: "valid-devicePath",
 		Path:   "valid-vol-path",
@@ -37,12 +40,17 @@ func NewFakeSafeMounter() Mounter {
 		Pass:   2,
 	}},
 	}
-	//TODO: NewFakeExec is deprecated; failing test
-	//fakeExec := exec.New()
-	var fakeExecInterface exec.Interface = &testExec.FakeExec{}
-	//mount.NewFakeExec(execCallback)
-	return &NodeMounter{&mount.SafeFormatAndMount{
+
+	var fakeExec exec.Interface = &testExec.FakeExec{
+		CommandScript: []testExec.FakeCommandAction{
+			func(cmd string, args ...string) exec.Cmd {
+				return nil
+			},
+		},
+	}
+
+	return &mount.SafeFormatAndMount{
 		Interface: fakeMounter,
-		Exec:      fakeExecInterface,
-	}}
+		Exec:      fakeExec,
+	}
 }
