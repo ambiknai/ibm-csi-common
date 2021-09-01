@@ -23,7 +23,7 @@ import (
 	testExec "k8s.io/utils/exec/testing"
 )
 
-// NewNodeMounter ...
+// NewFakeNodeMounter ...
 func NewFakeNodeMounter() Mounter {
 	fakesafemounter := NewFakeSafeMounter()
 	return &NodeMounter{fakesafemounter}
