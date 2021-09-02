@@ -23,10 +23,16 @@ import (
 	testExec "k8s.io/utils/exec/testing"
 )
 
+// FakeNodeMounter ...
+type FakeNodeMounter struct {
+	*mount.SafeFormatAndMount
+}
+
 // NewFakeNodeMounter ...
 func NewFakeNodeMounter() Mounter {
+	//Have to make changes here to pass the Mock functions
 	fakesafemounter := NewFakeSafeMounter()
-	return &NodeMounter{fakesafemounter}
+	return &FakeNodeMounter{fakesafemounter}
 }
 
 // NewFakeSafeMounter ...
@@ -53,4 +59,24 @@ func NewFakeSafeMounter() *mount.SafeFormatAndMount {
 		Interface: fakeMounter,
 		Exec:      fakeExec,
 	}
+}
+
+// MakeDir ...
+func (f *FakeNodeMounter) MakeDir(pathname string) error {
+	return nil
+}
+
+// MakeFile ...
+func (f *FakeNodeMounter) MakeFile(pathname string) error {
+	return nil
+}
+
+// PathExists ...
+func (f *FakeNodeMounter) PathExists(pathname string) (bool, error) {
+	return mount.PathExists(pathname)
+}
+
+// NewSafeFormatAndMount ...
+func (f *FakeNodeMounter) NewSafeFormatAndMount() *mount.SafeFormatAndMount {
+	return NewFakeSafeMounter()
 }
