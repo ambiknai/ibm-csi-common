@@ -48,11 +48,14 @@ func NewFakeSafeMounter() *mount.SafeFormatAndMount {
 	}
 
 	var fakeExec exec.Interface = &testExec.FakeExec{
-		CommandScript: []testExec.FakeCommandAction{
-			func(cmd string, args ...string) exec.Cmd {
-				return nil
-			},
-		},
+		DisableScripts: true,
+		// CommandScript: []testExec.FakeCommandAction{
+		// 	func(cmd string, args ...string) exec.Cmd {
+		// 		return &testExec.FakeCmd{
+		// 			CombinedOutputScript: []testExec.FakeAction{func() ([]byte, []byte, error) { return nil, nil, nil }},
+		// 		}
+		// 	},
+		// },
 	}
 
 	return &mount.SafeFormatAndMount{
